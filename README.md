@@ -1,2 +1,2 @@
 # CoursInformatique
-Ce projet est un Web API qu'offre des cours d'informatique. Utilise Services Rest et le protocole Http 
+Ce projet est un Web API qu'offre des cours d'informatique. Il utilise rest service et le Http protocol
