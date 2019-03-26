@@ -9,12 +9,12 @@ namespace CoursInformatique.Controllers
 
         public IHttpActionResult GetCours(int Id)
         {
-            if (Id < 0)
+            if (Id <= 0)
                 return BadRequest("Le Id doit être supérieur à zero"); /*400*/
 
             var curso = db.Cours.Find(Id);
 
-            if (curso == null)
+            if (curso is null)
                 return NotFound(); /*404*/
 
             return Ok(curso); /*200*/
@@ -41,6 +41,22 @@ namespace CoursInformatique.Controllers
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = cours.Id }, cours); /*201*/
+        }
+
+        public IHttpActionResult DeleteCours(int Id)
+        {
+            if (Id <= 0) 
+                return BadRequest("Le Id doit être supérieur à zero"); /*400*/
+
+            var cours = db.Cours.Find(Id);
+
+            if (cours is null)
+                return NotFound(); /*404*/
+
+            db.Cours.Remove(cours);
+            db.SaveChanges();
+
+            return StatusCode(System.Net.HttpStatusCode.NoContent); /*204*/
         }
 
         //TODO GetAll, Put
