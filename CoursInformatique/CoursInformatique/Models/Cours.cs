@@ -11,21 +11,21 @@ namespace CoursInformatique.Models
 
         [Required(ErrorMessage = "Le Titre du cours doit être Informé.")]
         [MaxLength(100, ErrorMessage = "Le titre du cours ne peut contenir que 100 caractères.")]
-        public string Titulo { get; set; }
+        public string Titre { get; set; }
 
         [Required(ErrorMessage = "L'Url du cours doit être complétée.")]
         [Url(ErrorMessage = "L'Url du cours doit contenir une adresse valide.")]
-        public string URL { get; set; }
+        public string Url { get; set; }
 
         [Required(ErrorMessage = "Le Canal du cours doit être Informé.")]
         //[JsonConverter(typeof(StringEnumConverter))]
         public Canal Canal { get; set; }
 
         [Required(ErrorMessage = "La date de publication du cours doit être complétée.")]
-        public DateTime DataPublicacao { get; set; }
+        public DateTime DatePublication { get; set; }
 
         [Required(ErrorMessage = "La charge de cours doit être complétée.")]
         [Range(1, Int32.MaxValue, ErrorMessage = "La charge doit durer au moins 1h")]
-        public int CargaHoraria { get; set; }
+        public int ChargeCours { get; set; }
     }
 }
