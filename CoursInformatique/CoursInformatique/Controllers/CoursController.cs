@@ -1,4 +1,5 @@
 ﻿using CoursInformatique.Models;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -85,6 +86,32 @@ namespace CoursInformatique.Controllers
             return StatusCode(HttpStatusCode.NoContent); /*204*/
         }
 
-        //TODO GetAll, Put
+        public IHttpActionResult GetCursos(int page = 1, int taillePage = 10)
+        {
+            if (page <= 0 || taillePage <= 0)
+                return BadRequest("Les paramètres Page et TaillePage doivent être supérieurs à zéro.");
+
+            if (taillePage > 10)
+                return BadRequest("O tamanho maximo de pagina permitido e 10.");
+
+            int totalPage = (int)Math.Ceiling(db.Cours.Count() / Convert.ToDecimal(taillePage));
+
+            if (page > totalPage)
+                return BadRequest("A pagina solicitada nao existe.");
+
+            HttpContext.Current.Response.AddHeader("X-Pagination-TotalPages", totalPage.ToString());
+
+            if (page > 1)
+                HttpContext.Current.Response.AddHeader("X-Pagination-PreviousPage",
+                    Url.Link("DefaultApi", new { page = page - 1, taillePage = taillePage }));
+
+            if (page < totalPage)
+                HttpContext.Current.Response.AddHeader("X-Pagination-NextPage",
+                    Url.Link("DefaultApi", new { page = page + 1, taillePage = taillePage }));
+
+            var cursos = db.Cours.OrderBy(c => c.DatePublication).Skip(taillePage * (page - 1)).Take(taillePage);
+
+            return Ok(cursos);
+        }
     }
 }
