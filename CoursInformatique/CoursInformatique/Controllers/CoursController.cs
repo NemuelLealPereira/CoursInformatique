@@ -1,4 +1,8 @@
 ﻿using CoursInformatique.Models;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
 using System.Web.Http;
 
 namespace CoursInformatique.Controllers
@@ -7,12 +11,12 @@ namespace CoursInformatique.Controllers
     {
         private CoursInformatiqueContext db = new CoursInformatiqueContext();
 
-        public IHttpActionResult GetCours(int Id)
+        public IHttpActionResult GetCours(int id)
         {
-            if (Id <= 0)
+            if (id <= 0)
                 return BadRequest("Le Id doit être supérieur à zero"); /*400*/
 
-            var curso = db.Cours.Find(Id);
+            var curso = db.Cours.Find(id);
 
             if (curso is null)
                 return NotFound(); /*404*/
@@ -43,12 +47,12 @@ namespace CoursInformatique.Controllers
             return CreatedAtRoute("DefaultApi", new { id = cours.Id }, cours); /*201*/
         }
 
-        public IHttpActionResult DeleteCours(int Id)
+        public IHttpActionResult DeleteCours(int id)
         {
-            if (Id <= 0) 
+            if (id <= 0)
                 return BadRequest("Le Id doit être supérieur à zero"); /*400*/
 
-            var cours = db.Cours.Find(Id);
+            var cours = db.Cours.Find(id);
 
             if (cours is null)
                 return NotFound(); /*404*/
@@ -56,7 +60,29 @@ namespace CoursInformatique.Controllers
             db.Cours.Remove(cours);
             db.SaveChanges();
 
-            return StatusCode(System.Net.HttpStatusCode.NoContent); /*204*/
+            return StatusCode(HttpStatusCode.NoContent); /*204*/
+        }
+
+        public IHttpActionResult PutCours(int id, Cours cours)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); /*400*/
+
+            if (id <= 0)
+                return BadRequest("Le Id doit être supérieur à zero"); /*400*/
+
+            if (id != cours.Id)
+                return BadRequest("L'id entré dans l'URL est différent de l'Id inscrit dans le corps de la requête."); /*400*/
+
+            if (db.Cours.Count(c => c.Id.Equals(id)) == 0)
+                return NotFound(); /*404*/
+
+            db.Entry(cours).State = EntityState.Modified;
+            db.SaveChanges();
+
+            HttpContext.Current.Response.AddHeader("X-cours-Modifie", Url.Link("DefaultApi", new { id = cours.Id }));
+
+            return StatusCode(HttpStatusCode.NoContent); /*204*/
         }
 
         //TODO GetAll, Put

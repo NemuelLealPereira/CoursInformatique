@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +20,7 @@ namespace CoursInformatique.Models
         public string Url { get; set; }
 
         [Required(ErrorMessage = "Le Canal du cours doit être Informé.")]
-        //[JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public Canal Canal { get; set; }
 
         [Required(ErrorMessage = "La date de publication du cours doit être complétée.")]
